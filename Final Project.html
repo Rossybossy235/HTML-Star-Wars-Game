@@ -1,0 +1,1135 @@
+<html>
+<head>
+
+	<style>
+		canvas{
+			background: #dddddd;
+		}
+	</style>
+
+	<script>
+
+		//variable that will track if you are dead
+		var dead = false;
+		
+		//X-wing class (your character)
+		var X1 = new xWingClass(400, 300, 50, 50);
+		
+		function xWingClass	(xwX, xwY,			// location
+							   xwWidth, xwHeight,	// dimensions
+							   xwImgFile)			// image file name
+		{
+			// Constructor
+			this.x = xwX;
+			this.y = xwY;
+			this.width = xwWidth;
+			this.height = xwHeight;
+			this.img = xwImgFile;
+			this.img = new Image();
+			this.img.src = "XwingU.gif";
+
+
+			// Draw this platform on the screen
+			this.draw = function(){
+				c.drawImage(this.img, this.x, this.y, this.width, this.height);
+			}
+			
+				//move up
+			this.moveUp = function(){
+				this.y -= 3;
+				this.img.src = "XwingU.gif";
+				direction = 0;
+				
+				//move up left/ up right
+				if(curkeys[37]){			//if left key is also pressed, change picture to diagonal
+					this.img.src = "XwingUL.gif";
+					direction = 7;
+				}
+				if(curkeys[39]){			//if right key is also pressed, change picture to diagonal
+					this.img.src = "XwingUR.gif";
+					direction = 1;
+				}
+			}
+			
+				//move down
+			this.moveDown = function(){
+				this.y += 3;
+				this.img.src = "XwingD.gif";
+				direction = 4;
+				
+				if(curkeys[37]){			//if left key is also pressed, change picture to diagonal
+					this.img.src = "XwingDL.gif";
+					direction = 5;
+				}
+				if(curkeys[39]){			//if right key is also pressed, change picture to diagonal
+					this.img.src = "XwingDR.gif";
+					direction = 3;
+				}
+			}
+			
+			this.moveRight = function(){
+				this.x += 3;
+				this.img.src = "XwingR.gif";
+				direction = 2;
+			}
+			
+			this.moveLeft = function(){
+				this.x -= 3;
+				this.img.src = "XwingL.gif";
+				direction  = 6;
+			}
+			
+			//updates character
+			this.update = function(){
+			
+				//if your character intersects any of the boundaries, you lose
+				if(X1.intersects(bound1)){
+					dead = true;
+					this.img.src = "explosion.gif";
+					gameState = "dead";
+				}
+				if(X1.intersects(bound2)){
+					dead = true;
+					this.img.src = "explosion.gif";
+					gameState = "dead";
+				}
+				if(X1.intersects(bound3)){
+					dead = true;
+					this.img.src = "explosion.gif";
+					gameState = "dead";
+				}
+				if(X1.intersects(bound4)){
+					dead = true;
+					this.img.src = "explosion.gif";
+					gameState = "dead";
+				}
+				
+				for(i = 0; i < 40; i++){
+					if(X1.intersects(tieArray[i])){
+						dead = true;
+						this.img.src = "explosion.gif";
+						gameState = "dead";
+						tieArray[i].bVisible = false;
+					}
+				}
+				if(gameState == "dead"){
+						this.img.src = "explosion.gif";
+						setTimeout(function(){X1.img.src = "XwingDebris.png"; }, 900);
+						setTimeout(function(){gameState = "lose"; }, 1550);
+						
+				}
+			}
+			
+			this.intersects = function(obj){
+				if (this.x < obj.x + obj.width &&
+					this.x + this.width > obj.x &&
+					this.y < obj.y + obj.height &&
+					this.y + this.height > obj.y)
+				{
+					return true;
+				}
+				else{
+					return false;
+				}
+			}
+		}
+		
+		
+		//right bound class
+		var bound1 = new boundRClass();
+		
+		function boundRClass(){
+		
+			this.x = 790;
+			this.y = 0;
+			this.width = 10;
+			this.height = 400;
+			this.img = new Image();
+			this.img.src = "boundR.gif";
+			
+			this.draw = function(){
+				c.drawImage(this.img, this.x, this.y, this.width, this.height);
+			}
+		}
+		
+		//top boundary class
+		var bound2 = new boundTClass();
+		
+		function boundTClass(){
+		
+			this.x = 0;
+			this.y = 0;
+			this.width = 800;
+			this.height = 10;
+			this.img = new Image();
+			this.img.src = "boundT.gif";
+			
+			this.draw = function(){
+				c.drawImage(this.img, this.x, this.y, this.width, this.height);
+			}
+		}
+		
+		//left boundary class
+		var bound3 = new boundLClass();
+		
+		function boundLClass(){
+		
+			this.x = 0;
+			this.y = 0;
+			this.width = 10;
+			this.height = 400;
+			this.img = new Image();
+			this.img.src = "boundL.gif";
+			
+			this.draw = function(){
+				c.drawImage(this.img, this.x, this.y, this.width, this.height);
+			}
+		}
+		
+		//lower bound class
+		var bound4 = new boundBClass();
+		
+		function boundBClass(){
+		
+			this.x = 0;
+			this.y = 390;
+			this.width = 800;
+			this.height = 10;
+			this.img = new Image();
+			this.img.src = "boundB.gif";
+			
+			this.draw = function(){
+				c.drawImage(this.img, this.x, this.y, this.width, this.height);
+			}
+		}
+		
+		var direction = 0;
+		
+		//laser (shoot) class
+		function laserClass(laserX, laserY){
+		
+			this.x = laserX;
+			this.y = laserY;
+			this.width = 50;
+			this.height = 50;
+			this.img = new Image();
+			this.img.src = "laserUD.gif";
+			this.bVisible = false;
+			this.bInAir = false;
+			this.direction = 0;
+			
+			
+			/*this.updatePic() = function(){
+				if(X1.img.src == "XwingU.gif"){
+					direction = 0;
+				}else if(X1.img.src == "XwingUR.gif"){
+					direction = 1;
+				}else if(X1.img.src == "XwingR.gif"){
+					direction = 2;
+				}else if(X1.img.src == "XwingDR.gif"){
+					direction = 3;
+				}else if(X1.img.src == "XwingD.gif"){
+					direction = 4;
+				}else if(X1.img.src == "XwingDL.gif"){
+					direction = 5;
+				}else if(X1.img.src == "XwingL.gif"){
+					direction = 6;
+				}else if(X1.img.src == "XwingUL.gif"){
+					direction = 7;
+				}
+			}*/
+			
+			//shoot method
+			this.shoot = function(){
+			
+				if(this.bVisible == true){
+					if(this.direction == 0){
+						this.img.src = "laserUD.gif";
+						this.y -= 5;
+					}else if(this.direction == 1){
+						this.img.src = "laserURDL.gif";
+						this.y -= 5;
+						this.x += 5;
+					}else if(this.direction == 2){
+						this.img.src = "laserRL.gif";
+						this.x += 5;
+					}else if(this.direction == 3){
+						this.img.src = "laserULDR.gif";
+						this.y += 5;
+						this.x += 5;
+					}else if(this.direction == 4){
+						this.img.src = "laserUD.gif";
+						this.y += 5;
+					}else if(this.direction == 5){
+						this.img.src = "laserURDL.gif";
+						this.y += 5;
+						this.x -= 5;
+					}else if(this.direction == 6){
+						this.img.src = "laserRL.gif";
+						this.x -= 5;
+					}else if(this.direction == 7){
+						this.img.src = "laserULDR.gif";
+						this.x -=5;
+						this.y -= 5;
+					}
+				}
+				
+				if (this.x > 800 || this.x < -50 || this.y > 600 || this.y < -50){
+					this.bVisible = false;
+					this.bInAir = false;
+				}
+			}
+			
+			//draw lasers
+			this.draw = function(){
+				if(this.bVisible==true){
+					c.drawImage(this.img, this.x, this.y, this.width, this.height);
+				}
+			}
+			
+			this.intersects = function(obj){
+				if (this.x < obj.x + obj.width &&
+					this.x + this.width > obj.x &&
+					this.y < obj.y + obj.height &&
+					this.y + this.height > obj.y)
+				{
+					return true;
+				}
+				else{
+					return false;
+				}
+			}
+		}
+		
+		var laserArray = [];
+		for(i = 0; i < 20; i++){
+			laserArray[i] = new laserClass(-200,0);
+		}
+		var laserIndex = 0;
+		
+		//tie fighter (enemy) class
+		function tieClass(tieX, tieY){
+		
+			this.x = tieX;
+			this.y = tieY;
+			this.width = 50;
+			this.height = 50;
+			this.img = new Image();
+			this.img.src = "tieFighterU.png";
+			this.bVisible = false;
+			
+			this.update = function(){
+				
+				//tie movement and image change
+				if(this.bVisible == true){
+					if(this.x < X1.x){
+						this.x += 1.5;
+						//change image and movement to up-right
+						if(this.y>X1.y){
+							this.y -= 1.5;
+							this.img.src = "tieFighterUR.png";
+						}
+						//change image and movement to down-right
+						else if(this.y<X1.y){
+							this.y += 1.5;
+							this.img.src = "tieFighterDR.png";
+						}
+						
+					}
+					else if(this.x > X1.x){
+						this.x -= 1.5;
+						//change image and movement to up-left
+						if(this.y>X1.y){
+							this.y -= 1.5;
+							this.img.src = "tieFighterUL.png";
+						}
+						//change image and movement to down-left
+						else if (this.y<X1.y){
+							this.y += 1.5;
+							this.img.src = "tieFighterDL.png";
+						}
+						
+					}
+					if(this.x==X1.x){
+						this.x=X1.x;
+						//change image and movement to up
+						if(this.y>X1.y){
+							this.y -= 1.5;
+							this.img.src = "tieFighterU.png";
+						}
+						//change image and movement to down
+						else{
+							this.y += 1.5;
+							this.img.src = "tieFighterD.png";
+						}
+					}
+					if(this.y==X1.y){
+						this.y=X1.y;
+						//change image and movement to left
+						if(this.x>X1.x){
+							this.img.src = "tieFighterL.png";
+						}
+						//change image and movement to right
+						else{
+							this.img.src = "tieFighterR.png";
+						}
+					}
+					
+					//keep TIEs from from going back and forth diagonal
+					//because TIEs could never equal your X-value
+					if(this.x < X1.x + 2 && this.x > X1.x - 2){
+						if(this.y < X1.y){
+							this.img.src = "tieFighterD.png";
+						}
+						
+						if(this.y > X1.y){
+							this.img.src = "tieFighterU.png";
+						}
+					}
+				}
+			}
+			
+			this.draw = function(){
+				if(this.bVisible == true){
+					c.drawImage(this.img, this.x, this.y, this.width, this.height);
+				}
+			}
+		}
+		
+		//TIE array for each instance of tieClass (every TIE fighter)
+		var tieArray = [];
+		for(i = 0; i < 40; i++){
+			tieArray[i] = new tieClass(0,0);
+		}
+		var tieIndex = 0;
+		
+		//TIE spawn timer
+		tieTimer = new timerClass(500);
+		
+		//timer class
+		function timerClass(timeIntervalMS){
+			// Initialize oldTime to be the time of creation
+			this.oldTime = new Date();
+
+			// Set interval to elapse before the timer fires
+			this.interval = timeIntervalMS;
+			
+			// Keeps track of the # of milliseconds accumulated since the last firing
+			this.accum = 0;
+			
+
+			// This method returns true if the timer is ready to fire, false otherwise
+			// If it returns true, then resets fire interval
+			this.isReady = function(){
+				var curTime = new Date();
+				var delta = curTime - this.oldTime;
+
+				this.accum += delta;
+				this.oldTime = curTime;
+				if (this.accum > this.interval){
+					this.accum = 0;
+					return true;
+				}
+				else{
+					return false;
+				}
+			}
+		}
+
+		
+
+	
+		// Canvas context; used to call Canvas methods
+		var c;
+
+		// Canvas width and height.
+		var cWidth, cHeight;
+
+		// Stores the current keyboard state
+		var curkeys = [];
+		
+		// Stores keys that have been newly pressed since last update
+		var newkeys = [];
+
+		var gameState = "title";
+
+
+		// Initializes entire game framework. This method should only be called
+		// once, by the body onload event handler.
+		function gameFrameworkInit(){		
+			// Initialize key arrays
+			for (i = 0; i < 256; i++){
+				curkeys[i] = false;
+				newkeys[i] = false;
+			}
+		
+			// Initialize global variables for canvas
+			c = myCanvas.getContext('2d');
+			cWidth = myCanvas.width;
+			cHeight = myCanvas.height;
+
+
+			// Start listeners for getting keyboard state
+	        window.addEventListener('keydown',
+	        						 function(e){
+										if (!curkeys[e.keyCode]){
+											curkeys[e.keyCode] = true;
+											newkeys[e.keyCode] = true;
+										}
+									 }
+	        					   );
+	        
+	        window.addEventListener('keyup',
+	        						 function(e){ curkeys[e.keyCode] = false; }
+	        					   );
+
+			// Schedule the update function to be called right before the next repaint.
+			// (At the end of the update function, it will schedule itself to be called
+			// again before the NEXT repaint, and so on.
+			window.requestAnimationFrame(gameUpdate);
+		}
+
+
+
+
+		function gameUpdate(){
+			
+			if(gameState == "dead"){
+			
+				//updates TIEs
+				if(tieTimer.isReady() == true){
+					tieArray[tieIndex].bVisible = true;
+					tieArray[tieIndex].x = Math.ceil(Math.random() * 750);
+					tieArray[tieIndex].y = 0;
+				}
+				
+				if(tieArray[tieIndex].bVisible == true){
+					tieArray[tieIndex].update();	
+					tieIndex=(tieIndex+1)%20;
+				}
+				
+				for(i = 0; i < 40; i++){
+					tieArray[i].update();
+				}
+			}
+			
+			if(gameState == "play"){
+				
+				// Update X-wing
+				X1.update();
+				
+				//updates TIEs
+				if(tieTimer.isReady() == true){
+					tieArray[tieIndex].bVisible = true;
+					tieArray[tieIndex].x = Math.ceil(Math.random() * 750);
+					tieArray[tieIndex].y = 0;
+				}
+				
+				if(tieArray[tieIndex].bVisible == true){
+					tieArray[tieIndex].update();	
+					tieIndex=(tieIndex+1)%20;
+				}
+				
+				for(i = 0; i < 40; i++){
+					tieArray[i].update();
+				}
+				
+				for(i = 0; i < 20; i++){
+					laserArray[i].shoot();
+				}
+			
+				// X-wing movement
+				if(dead == false){
+					if(curkeys[37]){		//left
+						X1.moveLeft();
+					}
+					if(curkeys[39]){		//right
+						X1.moveRight();
+					}
+					if(curkeys[38]){			//up
+						X1.moveUp();
+					}
+					if(curkeys[40]){			//down
+						X1.moveDown();
+					}
+				}
+				
+				//if a TIE gets hit by a laser, make them disappear and reset their positions
+				for(i = 0; i < 20; i++){
+					laserArray[i].shoot();
+					for(j = 0; j < 40; j++){
+						if(laserArray[i].intersects(tieArray[j])){
+							laserArray[i].bVisible = false;
+							laserArray[i].x = -100;
+							laserArray[i].y = -50;
+							tieArray[j].bVisible = false;
+							tieArray[j].x = -200;
+							tieArray[j].y = -50;
+							TKills += 1;
+						}
+					}
+				}
+				
+				
+				
+				//shooting
+				if(newkeys[32]){
+					laserArray[laserIndex].bVisible=true;
+					//laserArray[laserIndex].updatePic();
+					laserArray[laserIndex].x = X1.x;
+					laserArray[laserIndex].y = X1.y;
+					
+					if(direction == 0){
+						laserArray[laserIndex].direction = 0;
+					}
+					if(direction == 1){
+						laserArray[laserIndex].direction = 1;
+					}
+					if(direction == 2){
+						laserArray[laserIndex].direction = 2;
+					}
+					if(direction == 3){
+						laserArray[laserIndex].direction = 3;
+					}
+					if(direction == 4){
+						laserArray[laserIndex].direction = 4;
+					}
+					if(direction == 5){
+						laserArray[laserIndex].direction = 5;
+					}
+					if(direction == 6){
+						laserArray[laserIndex].direction = 6;
+					}
+					if(direction == 7){
+						laserArray[laserIndex].direction = 7;
+					}
+					
+					laserIndex=(laserIndex+1)%20;
+				}
+				
+			}
+			
+			if(gameState == "title"){
+				
+				if(newkeys[13]){
+					gameState = "play";
+				}
+				
+				if(newkeys[32]){
+					gameState = "tutorial";
+				}
+			}
+			
+			if(gameState == "lose"){
+			
+				for(i = 0; i < 20; i++){
+					laserArray[i].direction = 0;
+				}
+				
+				//go back to title screen
+				if(newkeys[8]){
+					gameState = "title";
+					X1.x = 400;
+					X1.y = 300;
+					X1.img.src = "XwingU.gif";
+					TimeSurv = 0;
+					TKills = 0;
+					dead = false;
+					
+					for(i = 0; i < 40; i++){
+						tieArray[i].img.src = "tieFighterU.png";
+						tieArray[i].x = -200;
+						tieArray[i].y = 0;
+						tieArray[i].bVisible = false;
+					}
+				}
+				
+				//reset X-wing and play again
+				if(newkeys[13]){
+					gameState = "play";
+					X1.x = 400;
+					X1.y = 300;
+					X1.img.src = "XwingU.gif";
+					dead = false;
+					
+					for(i = 0; i < 40; i++){
+						tieArray[i].img.src = "tieFighterU.png";
+						tieArray[i].x = -200;
+						tieArray[i].y = 0;
+						tieArray[i].bVisible = false;
+					}
+					
+					TimeSurv = 0;
+					TKills = 0;
+				}
+				
+				direction = 0;
+			}
+			
+			console.log(gameState);
+			
+			if(gameState == "tutorial"){
+				
+				if(newkeys[8]){
+					gameState = "title";
+				}
+				
+				if(newkeys[13]){
+					gameState = "tutorial1";
+				}
+			}
+			
+			// Reset newkeys
+			//for (i = 0; i < 256; i++){
+			//	newkeys[i] = false;
+			//}
+			
+			if(gameState == "tutorial1"){
+				
+				if(newkeys[8]){
+					gameState = "title";
+				}
+				if(newkeys[50]){
+					gameState = "tutorial2";
+				}
+				if(newkeys[51]){
+					gameState = "tutorial3";
+				}
+				if(newkeys[52]){
+					gameState = "tutorial4";
+				}
+				if(newkeys[53]){
+					gameState = "tutorial5";
+				}
+				if(newkeys[54]){
+					gameState = "tutorial6";
+				}
+			}
+			
+			// Reset newkeys
+			//for (i = 0; i < 256; i++){
+			//	newkeys[i] = false;
+			//}
+			
+			if(gameState == "tutorial2"){
+				
+				if(newkeys[8]){
+					gameState = "title";
+				}
+				
+				if(newkeys[49]){
+					gameState = "tutorial1";
+				}
+				if(newkeys[51]){
+					gameState = "tutorial3";
+				}
+				if(newkeys[52]){
+					gameState = "tutorial4";
+				}
+				if(newkeys[53]){
+					gameState = "tutorial5";
+				}
+				if(newkeys[54]){
+					gameState = "tutorial6";
+				}
+			}
+			
+			if(gameState == "tutorial3"){
+			
+				if(newkeys[8]){
+					gameState = "title";
+				}
+				
+				if(newkeys[49]){
+					gameState = "tutorial1";
+				}
+				if(newkeys[50]){
+					gameState = "tutorial2";
+				}
+				if(newkeys[52]){
+					gameState = "tutorial4";
+				}
+				if(newkeys[53]){
+					gameState = "tutorial5";
+				}
+				if(newkeys[54]){
+					gameState = "tutorial6";
+				}
+			}
+			
+			if(gameState == "tutorial4"){
+			
+				if(newkeys[8]){
+					gameState = "title";
+				}
+				
+				if(newkeys[49]){
+					gameState = "tutorial1";
+				}
+				if(newkeys[50]){
+					gameState = "tutorial2";
+				}
+				if(newkeys[51]){
+					gameState = "tutorial3";
+				}
+				if(newkeys[53]){
+					gameState = "tutorial5";
+				}
+				if(newkeys[54]){
+					gameState = "tutorial6";
+				}
+			}
+			if(gameState == "tutorial5"){
+				
+				if(newkeys[8]){
+					gameState = "title";
+				}
+				
+				if(newkeys[49]){
+					gameState = "tutorial1";
+				}
+				if(newkeys[50]){
+					gameState = "tutorial2";
+				}
+				if(newkeys[51]){
+					gameState = "tutorial3";
+				}
+				if(newkeys[52]){
+					gameState = "tutorial4";
+				}
+				if(newkeys[54]){
+					gameState = "tutorial6";
+				}
+			}
+			
+			if(gameState == "tutorial6"){
+			
+				if(newkeys[8]){
+					gameState = "title";
+				}
+				
+				if(newkeys[49]){
+					gameState = "tutorial1";
+				}
+				if(newkeys[50]){
+					gameState = "tutorial2";
+				}
+				if(newkeys[51]){
+					gameState = "tutorial3";
+				}
+				if(newkeys[52]){
+					gameState = "tutorial4";
+				}
+				if(newkeys[53]){
+					gameState = "tutorial5";
+				}
+				
+				if(newkeys[13]){
+					gameState = "play";
+				}
+			}
+			
+			// Reset newkeys
+			for (i = 0; i < 256; i++){
+				newkeys[i] = false;
+			}
+
+			// At the end of the update function, repaint the screen
+			gameDraw();
+				
+			// Last thing the update function does is to schedule itself to be called
+			// again before the next repaint
+			window.requestAnimationFrame(gameUpdate);
+		}
+		
+		//variables to track the amount of time survived amount you number of kills
+		var TimeSurv = 0;
+		var TKills = 0;
+
+		function gameDraw(){
+			// Clear the canvas before we draw the current frame
+			c.clearRect(0,0,cWidth,cHeight);
+
+			// Draw the background
+			var bg = new Image();
+			bg.src = "spaceBackground.png";
+			c.drawImage(bg, 0, 0, 800, 600);
+
+			if(gameState == "play"){
+				
+				//call draw functions
+				X1.draw();
+				bound1.draw();
+				bound2.draw();
+				bound3.draw();
+				bound4.draw();
+				
+				for(i = 0; i < 20; i++){	//updates all lasers
+					laserArray[i].draw();
+				}
+				for(i = 0; i < 40; i++){	//updates all TIEs
+					tieArray[i].draw();
+				}
+				
+				/*var survInt = setTimeout(function(){TimeSurv += 1}, 1000);
+				if(dead == true){
+					clearInterval(survInt);
+				}*/
+				
+				//draws text for time survived and number of kills
+				c.font = "15px Arial Black";
+				c.fillStyle = "red";
+				
+				//c.fillText("Time survived:" + Math.floor(TimeSurv/100), 10, 560);
+				c.fillText("TIEs destroyed:" + TKills, 10, 580);
+			}
+			
+			if(gameState == "dead"){
+				
+				//call draw functions
+				X1.draw();
+				bound1.draw();
+				bound2.draw();
+				bound3.draw();
+				bound4.draw();
+				
+				for(i = 0; i < 40; i++){
+					tieArray[i].draw();
+				}
+			}
+			
+			if(gameState == "lose"){
+				
+				//call draw functions
+				X1.draw();
+				bound1.draw();
+				bound2.draw();
+				bound3.draw();
+				bound4.draw();
+				
+				for(i = 0; i < 20; i++){
+					laserArray[i].bVisible = false;
+					laserArray[i].x = 0;
+					laserArray[i].y = 0;
+				}
+				
+				
+				c.fillStyle = "red";
+				
+				c.font = "30px Arial Black";
+				
+				c.fillText("You have been destroyed!", 180, 300);
+				
+				c.font = "15px Arial Black";
+				
+				c.fillText("Press Enter to play again", 275, 350);
+				c.fillText("Press Backspace to return to main menu", 220, 375);
+				//c.fillText("You survived " + Math.floor(TimeSurv/100) + " seconds", 275, 325);
+				c.fillText("You destroyed " + TKills + " TIE fighters", 265, 325);
+			}
+			
+			if(gameState == "title"){
+				
+				c.fillStyle = "red";
+				
+				c.font = "30px Arial Black";
+				c.fillText("The Empire's Revenge", 200, 300);
+				
+				c.font = "15px Arial Black";
+				c.fillText("Press Space to view tutorial", 10, 550);
+				c.fillText("Press Enter to start", 10, 525);
+				c.fillText("Made by Ross Parker", 300, 325);
+			}
+			
+			//image to mark which page you're on
+			var pageMark = new Image();
+				pageMark.png = "pageMark.png";
+			
+			if(gameState == "tutorial"){
+				
+				c.fillStyle = "red";
+				
+				c.font = "20px Arial Black";
+				c.fillText("Welcome to The Empire's Revenge!", 200, 250);
+				
+				c.font = "15px Arial Black";
+				c.fillText("Lets get you started...", 300, 275);
+				c.fillText("Press Enter to begin tutorial", 270, 295);
+				
+				c.font = "10px Arial Black";
+				c.fillText("Backspace to quit tutorial", 650, 20);
+			}
+			
+			if(gameState == "tutorial1"){
+				
+				var tut1Img = new Image();
+				tut1Img.src = "XwingU.gif";
+				
+				c.drawImage(tut1Img , 335, 300, 150, 150);
+				
+				c.fillStyle = "red";
+				c.font = "20px Arial Black";
+				c.fillText("This is you", 350, 275);
+				
+				c.font = "15px Arial Black";
+				c.fillText("Use number keys to navigate", 550, 580);
+				
+				c.font = "10px Arial Black";
+				c.fillText("Backspace to quit tutorial", 650, 20);
+				
+				c.font = "15px Arial Black";
+				c.fillText("Slide 1", 10, 580);
+			}
+			
+			if(gameState == "tutorial2"){
+			
+				var tut2Img = new Image();
+				tut2Img.src = "tieFighterU.png";
+				
+				c.drawImage(tut2Img, 335, 300, 150, 150);
+				
+				c.fillStyle = "red";
+				c.font = "20px Arial Black";
+				c.fillText("This is an enemy", 325, 275);
+				c.fillText("Your objective is to survive as long as possible", 150, 500);
+				c.fillText("until reinforcements arrive", 250, 525);
+				
+				c.font = "15px Arial Black";
+				c.fillText("Use number keys to navigate", 550, 580);
+				
+				c.font = "10px Arial Black";
+				c.fillText("Backspace to quit tutorial", 650, 20);
+				
+				c.font = "15px Arial Black";
+				c.fillText("Slide 2", 10, 580);
+				
+			}
+			
+			if(gameState == "tutorial3"){
+			
+				var tut3Xright = new Image();
+				tut3Xright.src = "XwingR.gif";
+				var tut3Xleft = new Image();
+				tut3Xleft.src = "XwingL.gif";
+				var tut3Xup = new Image();
+				tut3Xup.src = "XwingU.gif";
+				var tut3Xdown = new Image();
+				tut3Xdown.src = "XwingD.gif";
+				
+				c.drawImage(tut3Xright, 580, 325, 100, 100);
+				c.drawImage(tut3Xleft, 420, 325, 100, 100);
+				c.drawImage(tut3Xup, 120, 325, 100, 100);
+				c.drawImage(tut3Xdown, 280, 325, 100, 100);
+				
+				c.fillStyle = "red";
+				c.font = "20px Arial Black";
+				c.fillText("Use the arrow keys to move", 250, 200);
+				c.fillText("Up", 150, 300);
+				c.fillText("Down", 300, 300);
+				c.fillText("Left", 450, 300);
+				c.fillText("Right", 600, 300);
+				c.fillText("and diagonal", 325, 475);
+				
+				c.font = "15px Arial Black";
+				c.fillText("Use number keys to navigate", 550, 580);
+				
+				c.font = "10px Arial Black";
+				c.fillText("Backspace to quit tutorial", 650, 20);
+				
+				c.font = "15px Arial Black";
+				c.fillText("Slide 3", 10, 580);
+			}
+			
+			if(gameState == "tutorial4"){
+				
+				var tut4Xwing = new Image();
+				tut4Xwing.src = "XwingR.gif";
+				var tut4tie = new Image();
+				tut4tie.src = "tieFighterL.png";
+				var tut4laser = new Image();
+				tut4laser.src = "laserRL.gif";
+				
+				c.drawImage(tut4Xwing, 150, 250, 100, 100);
+				c.drawImage(tut4laser, 350, 250, 100, 100);
+				c.drawImage(tut4tie, 600, 250, 100, 100);
+				
+				c.fillStyle = "red";
+				c.font = "20px Arial Black";
+				c.fillText("Use the space bar to shoot enemy TIE fighters", 170, 200);
+				c.fillText("Due to their lack of defenses,", 250, 380);
+				c.fillText("they will die in one shot", 275,410);
+				
+				c.font = "15px Arial Black";
+				c.fillText("Use number keys to navigate", 550, 580);
+				
+				c.font = "10px Arial Black";
+				c.fillText("Backspace to quit tutorial", 650, 20);
+				
+				c.font = "15px Arial Black";
+				c.fillText("Slide 4", 10, 580);
+			}
+			
+			if(gameState == "tutorial5"){
+			
+				var tut5border = new Image();
+				tut5border.src = "boundL.gif";
+				
+				c.drawImage(tut5border, 0, 0, 10, 600);
+				
+				c.fillStyle = "red";
+				c.font = "20px Arial Black";
+				
+				c.fillText("The line to the left", 200, 250);
+				c.fillText("is a border.", 200, 275);
+				c.fillText("While in play, these borders", 200, 300);
+				c.fillText("will be on all sides.", 200, 325);
+				c.fillText("Running into one of these", 200, 425);
+				c.fillText("will result in instant death.", 200, 450);
+				
+				c.font = "15px Arial Black";
+				c.fillText("Use number keys to navigate", 550, 580);
+				
+				c.font = "10px Arial Black";
+				c.fillText("Backspace to quit tutorial", 650, 20);
+				
+				c.font = "15px Arial Black";
+				c.fillText("Slide 5", 10, 580);
+			}
+			
+			if(gameState == "tutorial6"){
+				
+				var tut6X1 = new Image();
+				tut6X1.src = "XwingU.gif";
+				var tut6X2 = new Image();
+				tut6X2.src = "XwingU.gif";
+				
+				c.drawImage(tut6X1, 175, 250, 100, 100);
+				c.drawImage(tut6X2, 550, 250, 100, 100);
+				
+				c.fillStyle = "red";
+				
+				c.font = "20px Arial Black";
+				c.fillText("Well done pilot!", 330, 280);
+				
+				c.font = "15px Arial Black";
+				c.fillText("I think you're ready for your", 300, 300);
+				c.fillText("your first combat mission.", 310, 320);
+				
+				c.fillText("Press Enter to go into combat", 545, 580);
+			}
+		}
+
+
+	</script>
+
+</head>
+
+
+<body onload="gameFrameworkInit()">
+	
+	<canvas id="myCanvas" width="800" height="600"></canvas>
+
+</body>
+
+
+</html>
