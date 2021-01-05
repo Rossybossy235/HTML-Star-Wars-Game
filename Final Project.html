@@ -415,9 +415,6 @@
 			}
 		}
 
-		
-
-	
 		// Canvas context; used to call Canvas methods
 		var c;
 
@@ -554,7 +551,6 @@
 				//shooting
 				if(newkeys[32]){
 					laserArray[laserIndex].bVisible=true;
-					//laserArray[laserIndex].updatePic();
 					laserArray[laserIndex].x = X1.x;
 					laserArray[laserIndex].y = X1.y;
 					
@@ -611,7 +607,6 @@
 					X1.x = 400;
 					X1.y = 300;
 					X1.img.src = "XwingU.gif";
-					TimeSurv = 0;
 					TKills = 0;
 					dead = false;
 					
@@ -638,7 +633,6 @@
 						tieArray[i].bVisible = false;
 					}
 					
-					TimeSurv = 0;
 					TKills = 0;
 				}
 				
@@ -657,11 +651,6 @@
 					gameState = "tutorial1";
 				}
 			}
-			
-			// Reset newkeys
-			//for (i = 0; i < 256; i++){
-			//	newkeys[i] = false;
-			//}
 			
 			if(gameState == "tutorial1"){
 				
@@ -684,11 +673,6 @@
 					gameState = "tutorial6";
 				}
 			}
-			
-			// Reset newkeys
-			//for (i = 0; i < 256; i++){
-			//	newkeys[i] = false;
-			//}
 			
 			if(gameState == "tutorial2"){
 				
@@ -821,8 +805,7 @@
 			window.requestAnimationFrame(gameUpdate);
 		}
 		
-		//variables to track the amount of time survived amount you number of kills
-		var TimeSurv = 0;
+		//variable to track your number of kills
 		var TKills = 0;
 
 		function gameDraw(){
@@ -850,16 +833,10 @@
 					tieArray[i].draw();
 				}
 				
-				/*var survInt = setTimeout(function(){TimeSurv += 1}, 1000);
-				if(dead == true){
-					clearInterval(survInt);
-				}*/
-				
 				//draws text for time survived and number of kills
 				c.font = "15px Arial Black";
 				c.fillStyle = "red";
 				
-				//c.fillText("Time survived:" + Math.floor(TimeSurv/100), 10, 560);
 				c.fillText("TIEs destroyed:" + TKills, 10, 580);
 			}
 			
@@ -903,7 +880,6 @@
 				
 				c.fillText("Press Enter to play again", 275, 350);
 				c.fillText("Press Backspace to return to main menu", 220, 375);
-				//c.fillText("You survived " + Math.floor(TimeSurv/100) + " seconds", 275, 325);
 				c.fillText("You destroyed " + TKills + " TIE fighters", 265, 325);
 			}
 			
