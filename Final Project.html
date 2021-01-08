@@ -26,7 +26,7 @@
 			this.height = xwHeight;
 			this.img = xwImgFile;
 			this.img = new Image();
-			this.img.src = "XwingU.gif";
+			this.img.src = "images/XwingU.gif";
 
 
 			// Draw this platform on the screen
@@ -37,16 +37,16 @@
 				//move up
 			this.moveUp = function(){
 				this.y -= 3;
-				this.img.src = "XwingU.gif";
+				this.img.src = "images/XwingU.gif";
 				direction = 0;
 				
 				//move up left/ up right
 				if(curkeys[37]){			//if left key is also pressed, change picture to diagonal
-					this.img.src = "XwingUL.gif";
+					this.img.src = "images/XwingUL.gif";
 					direction = 7;
 				}
 				if(curkeys[39]){			//if right key is also pressed, change picture to diagonal
-					this.img.src = "XwingUR.gif";
+					this.img.src = "images/XwingUR.gif";
 					direction = 1;
 				}
 			}
@@ -54,28 +54,28 @@
 				//move down
 			this.moveDown = function(){
 				this.y += 3;
-				this.img.src = "XwingD.gif";
+				this.img.src = "images/XwingD.gif";
 				direction = 4;
 				
 				if(curkeys[37]){			//if left key is also pressed, change picture to diagonal
-					this.img.src = "XwingDL.gif";
+					this.img.src = "images/XwingDL.gif";
 					direction = 5;
 				}
 				if(curkeys[39]){			//if right key is also pressed, change picture to diagonal
-					this.img.src = "XwingDR.gif";
+					this.img.src = "images/XwingDR.gif";
 					direction = 3;
 				}
 			}
 			
 			this.moveRight = function(){
 				this.x += 3;
-				this.img.src = "XwingR.gif";
+				this.img.src = "images/XwingR.gif";
 				direction = 2;
 			}
 			
 			this.moveLeft = function(){
 				this.x -= 3;
-				this.img.src = "XwingL.gif";
+				this.img.src = "images/XwingL.gif";
 				direction  = 6;
 			}
 			
@@ -85,36 +85,36 @@
 				//if your character intersects any of the boundaries, you lose
 				if(X1.intersects(bound1)){
 					dead = true;
-					this.img.src = "explosion.gif";
+					this.img.src = "images/explosion.gif";
 					gameState = "dead";
 				}
 				if(X1.intersects(bound2)){
 					dead = true;
-					this.img.src = "explosion.gif";
+					this.img.src = "images/explosion.gif";
 					gameState = "dead";
 				}
 				if(X1.intersects(bound3)){
 					dead = true;
-					this.img.src = "explosion.gif";
+					this.img.src = "images/explosion.gif";
 					gameState = "dead";
 				}
 				if(X1.intersects(bound4)){
 					dead = true;
-					this.img.src = "explosion.gif";
+					this.img.src = "images/explosion.gif";
 					gameState = "dead";
 				}
 				
 				for(i = 0; i < 40; i++){
 					if(X1.intersects(tieArray[i])){
 						dead = true;
-						this.img.src = "explosion.gif";
+						this.img.src = "images/explosion.gif";
 						gameState = "dead";
 						tieArray[i].bVisible = false;
 					}
 				}
 				if(gameState == "dead"){
-						this.img.src = "explosion.gif";
-						setTimeout(function(){X1.img.src = "XwingDebris.png"; }, 900);
+						this.img.src = "images/explosion.gif";
+						setTimeout(function(){X1.img.src = "images/XwingDebris.png"; }, 900);
 						setTimeout(function(){gameState = "lose"; }, 1550);
 						
 				}
@@ -145,7 +145,7 @@
 			this.width = 10;
 			this.height = 400;
 			this.img = new Image();
-			this.img.src = "boundR.gif";
+			this.img.src = "images/boundR.gif";
 			
 			this.draw = function(){
 				c.drawImage(this.img, this.x, this.y, this.width, this.height);
@@ -162,7 +162,7 @@
 			this.width = 800;
 			this.height = 10;
 			this.img = new Image();
-			this.img.src = "boundT.gif";
+			this.img.src = "images/boundT.gif";
 			
 			this.draw = function(){
 				c.drawImage(this.img, this.x, this.y, this.width, this.height);
@@ -179,7 +179,7 @@
 			this.width = 10;
 			this.height = 400;
 			this.img = new Image();
-			this.img.src = "boundL.gif";
+			this.img.src = "images/boundL.gif";
 			
 			this.draw = function(){
 				c.drawImage(this.img, this.x, this.y, this.width, this.height);
@@ -196,7 +196,7 @@
 			this.width = 800;
 			this.height = 10;
 			this.img = new Image();
-			this.img.src = "boundB.gif";
+			this.img.src = "images/boundB.gif";
 			
 			this.draw = function(){
 				c.drawImage(this.img, this.x, this.y, this.width, this.height);
@@ -213,7 +213,7 @@
 			this.width = 50;
 			this.height = 50;
 			this.img = new Image();
-			this.img.src = "laserUD.gif";
+			this.img.src = "images/laserUD.gif";
 			this.bVisible = false;
 			this.bInAir = false;
 			this.direction = 0;
@@ -223,31 +223,31 @@
 			
 				if(this.bVisible == true){
 					if(this.direction == 0){
-						this.img.src = "laserUD.gif";
+						this.img.src = "images/laserUD.gif";
 						this.y -= 5;
 					}else if(this.direction == 1){
-						this.img.src = "laserURDL.gif";
+						this.img.src = "images/laserURDL.gif";
 						this.y -= 5;
 						this.x += 5;
 					}else if(this.direction == 2){
-						this.img.src = "laserRL.gif";
+						this.img.src = "images/laserRL.gif";
 						this.x += 5;
 					}else if(this.direction == 3){
-						this.img.src = "laserULDR.gif";
+						this.img.src = "images/laserULDR.gif";
 						this.y += 5;
 						this.x += 5;
 					}else if(this.direction == 4){
-						this.img.src = "laserUD.gif";
+						this.img.src = "images/laserUD.gif";
 						this.y += 5;
 					}else if(this.direction == 5){
-						this.img.src = "laserURDL.gif";
+						this.img.src = "images/laserURDL.gif";
 						this.y += 5;
 						this.x -= 5;
 					}else if(this.direction == 6){
-						this.img.src = "laserRL.gif";
+						this.img.src = "images/laserRL.gif";
 						this.x -= 5;
 					}else if(this.direction == 7){
-						this.img.src = "laserULDR.gif";
+						this.img.src = "images/laserULDR.gif";
 						this.x -=5;
 						this.y -= 5;
 					}
@@ -294,7 +294,7 @@
 			this.width = 50;
 			this.height = 50;
 			this.img = new Image();
-			this.img.src = "tieFighterU.png";
+			this.img.src = "images/tieFighterU.png";
 			this.bVisible = false;
 			
 			this.update = function(){
@@ -306,12 +306,12 @@
 						//change image and movement to up-right
 						if(this.y>X1.y){
 							this.y -= 1.5;
-							this.img.src = "tieFighterUR.png";
+							this.img.src = "images/tieFighterUR.png";
 						}
 						//change image and movement to down-right
 						else if(this.y<X1.y){
 							this.y += 1.5;
-							this.img.src = "tieFighterDR.png";
+							this.img.src = "images/tieFighterDR.png";
 						}
 						
 					}
@@ -320,12 +320,12 @@
 						//change image and movement to up-left
 						if(this.y>X1.y){
 							this.y -= 1.5;
-							this.img.src = "tieFighterUL.png";
+							this.img.src = "images/tieFighterUL.png";
 						}
 						//change image and movement to down-left
 						else if (this.y<X1.y){
 							this.y += 1.5;
-							this.img.src = "tieFighterDL.png";
+							this.img.src = "images/tieFighterDL.png";
 						}
 						
 					}
@@ -334,23 +334,23 @@
 						//change image and movement to up
 						if(this.y>X1.y){
 							this.y -= 1.5;
-							this.img.src = "tieFighterU.png";
+							this.img.src = "images/tieFighterU.png";
 						}
 						//change image and movement to down
 						else{
 							this.y += 1.5;
-							this.img.src = "tieFighterD.png";
+							this.img.src = "images/tieFighterD.png";
 						}
 					}
 					if(this.y==X1.y){
 						this.y=X1.y;
 						//change image and movement to left
 						if(this.x>X1.x){
-							this.img.src = "tieFighterL.png";
+							this.img.src = "images/tieFighterL.png";
 						}
 						//change image and movement to right
 						else{
-							this.img.src = "tieFighterR.png";
+							this.img.src = "images/tieFighterR.png";
 						}
 					}
 					
@@ -358,11 +358,11 @@
 					//because TIEs could never equal your X-value
 					if(this.x < X1.x + 2 && this.x > X1.x - 2){
 						if(this.y < X1.y){
-							this.img.src = "tieFighterD.png";
+							this.img.src = "images/tieFighterD.png";
 						}
 						
 						if(this.y > X1.y){
-							this.img.src = "tieFighterU.png";
+							this.img.src = "images/tieFighterU.png";
 						}
 					}
 				}
@@ -606,12 +606,12 @@
 					gameState = "title";
 					X1.x = 400;
 					X1.y = 300;
-					X1.img.src = "XwingU.gif";
+					X1.img.src = "images/XwingU.gif";
 					TKills = 0;
 					dead = false;
 					
 					for(i = 0; i < 40; i++){
-						tieArray[i].img.src = "tieFighterU.png";
+						tieArray[i].img.src = "images/tieFighterU.png";
 						tieArray[i].x = -200;
 						tieArray[i].y = 0;
 						tieArray[i].bVisible = false;
@@ -623,11 +623,11 @@
 					gameState = "play";
 					X1.x = 400;
 					X1.y = 300;
-					X1.img.src = "XwingU.gif";
+					X1.img.src = "images/XwingU.gif";
 					dead = false;
 					
 					for(i = 0; i < 40; i++){
-						tieArray[i].img.src = "tieFighterU.png";
+						tieArray[i].img.src = "images/tieFighterU.png";
 						tieArray[i].x = -200;
 						tieArray[i].y = 0;
 						tieArray[i].bVisible = false;
@@ -814,7 +814,7 @@
 
 			// Draw the background
 			var bg = new Image();
-			bg.src = "spaceBackground.png";
+			bg.src = "images/spaceBackground.png";
 			c.drawImage(bg, 0, 0, 800, 600);
 
 			if(gameState == "play"){
@@ -914,7 +914,7 @@
 			if(gameState == "tutorial1"){
 				
 				var tut1Img = new Image();
-				tut1Img.src = "XwingU.gif";
+				tut1Img.src = "images/XwingU.gif";
 				
 				c.drawImage(tut1Img , 335, 300, 150, 150);
 				
@@ -935,7 +935,7 @@
 			if(gameState == "tutorial2"){
 			
 				var tut2Img = new Image();
-				tut2Img.src = "tieFighterU.png";
+				tut2Img.src = "images/tieFighterU.png";
 				
 				c.drawImage(tut2Img, 335, 300, 150, 150);
 				
@@ -959,13 +959,13 @@
 			if(gameState == "tutorial3"){
 			
 				var tut3Xright = new Image();
-				tut3Xright.src = "XwingR.gif";
+				tut3Xright.src = "images/XwingR.gif";
 				var tut3Xleft = new Image();
-				tut3Xleft.src = "XwingL.gif";
+				tut3Xleft.src = "images/XwingL.gif";
 				var tut3Xup = new Image();
-				tut3Xup.src = "XwingU.gif";
+				tut3Xup.src = "images/XwingU.gif";
 				var tut3Xdown = new Image();
-				tut3Xdown.src = "XwingD.gif";
+				tut3Xdown.src = "images/XwingD.gif";
 				
 				c.drawImage(tut3Xright, 580, 325, 100, 100);
 				c.drawImage(tut3Xleft, 420, 325, 100, 100);
@@ -994,11 +994,11 @@
 			if(gameState == "tutorial4"){
 				
 				var tut4Xwing = new Image();
-				tut4Xwing.src = "XwingR.gif";
+				tut4Xwing.src = "images/XwingR.gif";
 				var tut4tie = new Image();
-				tut4tie.src = "tieFighterL.png";
+				tut4tie.src = "images/tieFighterL.png";
 				var tut4laser = new Image();
-				tut4laser.src = "laserRL.gif";
+				tut4laser.src = "images/laserRL.gif";
 				
 				c.drawImage(tut4Xwing, 150, 250, 100, 100);
 				c.drawImage(tut4laser, 350, 250, 100, 100);
@@ -1023,7 +1023,7 @@
 			if(gameState == "tutorial5"){
 			
 				var tut5border = new Image();
-				tut5border.src = "boundL.gif";
+				tut5border.src = "images/boundL.gif";
 				
 				c.drawImage(tut5border, 0, 0, 10, 600);
 				
@@ -1050,9 +1050,9 @@
 			if(gameState == "tutorial6"){
 				
 				var tut6X1 = new Image();
-				tut6X1.src = "XwingU.gif";
+				tut6X1.src = "images/XwingU.gif";
 				var tut6X2 = new Image();
-				tut6X2.src = "XwingU.gif";
+				tut6X2.src = "images/XwingU.gif";
 				
 				c.drawImage(tut6X1, 175, 250, 100, 100);
 				c.drawImage(tut6X2, 550, 250, 100, 100);
